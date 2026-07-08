@@ -49,7 +49,8 @@ if (isProd) {
   });
 } else {
   // Vite Integration
-  const { createServer: createViteServer } = await import("vite");
+  const vitePkg = "vite";
+  const { createServer: createViteServer } = await import(vitePkg);
   const vite = await createViteServer({
     server: { middlewareMode: true },
     appType: "custom",
