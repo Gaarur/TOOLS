@@ -447,15 +447,16 @@ function createMockDb() {
   } as any;
 }
 
-const queryClient = postgres(databaseUrl || "postgresql://postgres:password@localhost:5432/omtt");
-const realDb = drizzle(queryClient, { schema });
-
 let dbInstance: any;
 
 if (!databaseUrl || databaseUrl.trim() === "") {
   dbInstance = createMockDb();
 } else {
-  dbInstance = realDb;
+  // Add connection_limit=1 for serverless/Vercel compatibility
+  const url = databaseUrl.includes("connection_limit") ? databaseUrl : `${databaseUrl}${databaseUrl.includes("?") ? "&" : "?"}connection_limit=1`;
+  const queryClient = postgres(url, { max: 1 });
+  dbInstance = drizzle(queryClient, { schema });
 }
 
-export const db: typeof realDb = dbInstance as typeof realDb;
+export const db = dbInstance as ReturnType<typeof drizzle<typeof schema>>;
+

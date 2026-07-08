@@ -3,8 +3,8 @@
   "outputDirectory": "dist/client",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "server/**",
-      "maxDuration": 10
+      "includeFiles": "{server,shared,drizzle}/**",
+      "maxDuration": 30
     }
   },
   "rewrites": [
