@@ -15,7 +15,7 @@ app.use(
   createExpressMiddleware({
     router: appRouter,
     createContext,
-    onError: ({ error, path }) => {
+    onError: ({ error, path }: { error: Error; path: string | undefined }) => {
       console.error(`tRPC error on ${path}:`, error);
     },
   })
