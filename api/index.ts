@@ -1,19 +1,28 @@
-export default async function (req: any, res: any) {
-  try {
-    const { default: app } = await import("../server/_core/index.js");
-    return app(req, res);
-  } catch (e: any) {
-    console.error("Vercel Serverless Error:", e);
-    return res.status(500).json({
-      error: {
-        message: e?.message || String(e),
-        code: -32603,
-        data: {
-          code: "INTERNAL_SERVER_ERROR",
-          httpStatus: 500,
-          stack: e?.stack
-        }
-      }
-    });
-  }
-}
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { createExpressMiddleware } from "@trpc/server/adapters/express";
+import { appRouter } from "../server/routers/index.js";
+import { createContext } from "../server/_core/context.js";
+
+const app = express();
+app.use(cors({ origin: true, credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
+
+app.use(
+  "/api/trpc",
+  createExpressMiddleware({
+    router: appRouter,
+    createContext,
+    onError: ({ error, path }) => {
+      console.error(`tRPC error on ${path}:`, error);
+    },
+  })
+);
+
+app.use((_req: any, res: any) => {
+  res.status(404).json({ error: "Not found" });
+});
+
+export default app;
