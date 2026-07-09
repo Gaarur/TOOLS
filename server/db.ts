@@ -452,9 +452,17 @@ let dbInstance: any;
 if (!databaseUrl || databaseUrl.trim() === "") {
   dbInstance = createMockDb();
 } else {
-  // Add connection_limit=1 for serverless/Vercel compatibility
-  const url = databaseUrl.includes("connection_limit") ? databaseUrl : `${databaseUrl}${databaseUrl.includes("?") ? "&" : "?"}connection_limit=1`;
-  const queryClient = postgres(url, { max: 1 });
+  // Use a connection limit of 1 on Vercel to prevent connection exhaustion,
+  // but allow up to 10 connections on Render/Local for parallel query performance.
+  const isServerless = !!process.env.VERCEL;
+  const maxConnections = isServerless ? 1 : 10;
+  
+  let url = databaseUrl;
+  if (isServerless) {
+    url = databaseUrl.includes("connection_limit") ? databaseUrl : `${databaseUrl}${databaseUrl.includes("?") ? "&" : "?"}connection_limit=1`;
+  }
+  
+  const queryClient = postgres(url, { max: maxConnections });
   dbInstance = drizzle(queryClient, { schema });
 }
 
