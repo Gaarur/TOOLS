@@ -45,3 +45,10 @@ export default function handler(req: any, res: any) {
     res.status(500).json({ error: "Vercel Handler Error", details: String(err), stack: err?.stack });
   }
 }
+
+// Disable Vercel's default body parser so express.json() doesn't hang
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
