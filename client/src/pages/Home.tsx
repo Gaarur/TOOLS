@@ -690,6 +690,85 @@ export default function Home() {
           );
         })()}
 
+        {/* Testimonials Section */}
+        {(() => {
+          const HARDCODED_TESTIMONIALS = [
+            { id: 1, name: "Suresh Patel", role: "Production Head, Automotive Parts", content: "OMTT's precision is unmatched. The multi-cavity moulds they delivered reduced our cycle time by 15% and have been running flawlessly for over a million cycles.", rating: 5 },
+            { id: 2, name: "Anita Desai", role: "Quality Director, Medical Devices", content: "The level of accuracy and surface finish achieved in our complex rubber seals was exceptional. Their CMM inspection reports provided complete confidence.", rating: 5 },
+            { id: 3, name: "Vikram Singh", role: "Operations Manager, Electronics", content: "We rely on their jigs and fixtures for our assembly lines. The quick-change capabilities have significantly improved our changeover times.", rating: 5 }
+          ];
+          const allTestimonials = testimonialsList.length > 0 ? testimonialsList : HARDCODED_TESTIMONIALS;
+
+          return (
+            <div id="testimonials" className="container py-24">
+              <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} custom={0} className="max-w-2xl mb-12">
+                <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">CLIENT TESTIMONIALS</h2>
+                <p className="text-muted-foreground text-lg">Trusted by industry leaders for uncompromising quality and reliability.</p>
+              </motion.div>
+              <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid md:grid-cols-3 gap-8">
+                {allTestimonials.map((testimonial: any) => (
+                  <motion.div key={testimonial.id} variants={staggerItem} className="bg-card border border-border p-8 rounded-sm shadow-sm relative group hover:border-primary transition-colors duration-300">
+                    <div className="text-4xl text-primary/20 absolute top-4 right-6 font-serif">"</div>
+                    <div className="flex text-primary mb-4">
+                      {Array.from({ length: testimonial.rating || 5 }).map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-primary" />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground italic mb-6 leading-relaxed relative z-10">"{testimonial.content}"</p>
+                    <div>
+                      <h4 className="font-bold text-foreground text-sm uppercase">{testimonial.name}</h4>
+                      <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          );
+        })()}
+
+        {/* FAQ Section */}
+        {(() => {
+          const HARDCODED_FAQS = [
+            { id: 1, question: "What is your standard lead time for new mould development?", answer: "Standard lead times vary based on complexity, but typically range from 4 to 8 weeks for injection moulds, and 3 to 6 weeks for rubber moulds and fixtures. Expedited options are available for urgent requirements." },
+            { id: 2, question: "Do you provide mould trial and validation services?", answer: "Yes, we conduct comprehensive mould trials (T0, T1, etc.) on our in-house injection moulding machines to validate dimensions, cycle times, and part quality before final delivery." },
+            { id: 3, question: "What tolerances can your facility achieve?", answer: "Our advanced CNC and EDM machinery, coupled with CMM inspection, allows us to achieve precision tolerances up to ±0.005mm depending on the material and geometry." },
+            { id: 4, question: "Can you assist with component design for manufacturability (DFM)?", answer: "Absolutely. Our engineering team provides detailed DFM analysis to optimize your part design for improved mouldability, reduced cycle times, and cost efficiency." }
+          ];
+          const allFaqs = faqsList.length > 0 ? faqsList : HARDCODED_FAQS;
+
+          return (
+            <div id="faq" className="bg-muted border-y border-border py-24">
+              <div className="container">
+                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} custom={0} className="max-w-3xl mx-auto text-center mb-12">
+                  <h2 className="text-3xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">FREQUENTLY ASKED QUESTIONS</h2>
+                </motion.div>
+                <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} custom={0.1} className="max-w-3xl mx-auto space-y-4">
+                  {allFaqs.map((faq: any, idx: number) => (
+                    <div key={faq.id} className="bg-background border border-border rounded-sm overflow-hidden">
+                      <button
+                        onClick={() => setExpandedFaq(expandedFaq === idx ? null : idx)}
+                        className="w-full px-6 py-4 flex justify-between items-center text-left hover:bg-secondary/50 transition-colors"
+                      >
+                        <span className="font-bold text-sm md:text-base">{faq.question}</span>
+                        {expandedFaq === idx ? (
+                          <ChevronUp className="w-5 h-5 text-primary flex-shrink-0 ml-4" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0 ml-4" />
+                        )}
+                      </button>
+                      {expandedFaq === idx && (
+                        <div className="px-6 pb-4 pt-2 text-muted-foreground text-sm leading-relaxed border-t border-border/50 bg-secondary/20">
+                          {faq.answer}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Blog Carousel Section */}
         {(() => {
           const HARDCODED_BLOGS = [
