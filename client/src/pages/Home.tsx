@@ -9,6 +9,7 @@ import { Menu, X, Loader2, Send, Star, ChevronDown, ChevronUp } from "lucide-rea
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import { motion } from "framer-motion";
+import { useLocation } from "wouter";
 
 // --- Animation Variants ---
 const EASE_SMOOTH = [0.25, 0.46, 0.45, 0.94] as const;
@@ -101,7 +102,7 @@ export default function Home() {
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [showAllTeam, setShowAllTeam] = useState(false);
+  const [, navigate] = useLocation();
   const HARDCODED_TEAM = [
     { name: "Rajesh Sharma", role: "Founder & Managing Director", bio: "25+ years of pioneering experience in tool room operations and precision mould engineering.", initial: "R" },
     { name: "Amit Kumar", role: "Head of Design & CAD/CAM", bio: "Specialist in multi-cavity mould design, flow simulation, and CNC tool path optimization.", initial: "A" },
@@ -610,7 +611,7 @@ export default function Home() {
         {/* Team Members Section */}
         {(() => {
           const allMembers: any[] = teamList.length > 0 ? teamList : HARDCODED_TEAM;
-          const visibleMembers = showAllTeam ? allMembers : allMembers.slice(0, 4);
+          const visibleMembers = allMembers.slice(0, 4);
           const hasMore = allMembers.length > 4;
           return (
             <div id="team" className="container py-24">
@@ -651,15 +652,13 @@ export default function Home() {
               {hasMore && (
                 <div className="flex justify-center mt-10">
                   <motion.button
-                    onClick={() => setShowAllTeam(!showAllTeam)}
+                    onClick={() => navigate("/team")}
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     className="w-14 h-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center border-2 border-primary/30 hover:shadow-xl hover:shadow-primary/20 transition-all duration-300"
-                    aria-label={showAllTeam ? "Show less team members" : "Show more team members"}
+                    aria-label="View all team members"
                   >
-                    <motion.div animate={{ rotate: showAllTeam ? 180 : 0 }} transition={{ duration: 0.35, ease: "easeInOut" }}>
-                      <ChevronDown className="w-6 h-6" />
-                    </motion.div>
+                    <ChevronDown className="w-6 h-6" />
                   </motion.button>
                 </div>
               )}

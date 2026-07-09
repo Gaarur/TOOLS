@@ -44,10 +44,13 @@ function AdminRouter() {
   );
 }
 
+import TeamPage from "./pages/TeamPage";
+
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/team" component={TeamPage} />
       <Route path="/portal-secret-entry-omtt" component={AdminPortal} />
       {/* Nested Admin Routes */}
       <Route path="/admin/*" component={AdminRouter} />
