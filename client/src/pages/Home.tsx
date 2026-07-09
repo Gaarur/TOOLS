@@ -643,69 +643,87 @@ export default function Home() {
           );
         })()}
         {/* Gallery Section */}
-        {galleryList.length > 0 && (
-          <div className="bg-muted border-y border-border py-24">
-            <div className="container">
-              <motion.h2
+        {(() => {
+          const HARDCODED_GALLERY = [
+            { id: 1, imageUrl: "/images/plastic.png", caption: "Injection Molding Machine" },
+            { id: 2, imageUrl: "/images/rubber.png", caption: "Rubber Compression Press" },
+            { id: 3, imageUrl: "/images/jigs.png", caption: "Precision Jigs" },
+            { id: 4, imageUrl: "/images/hero.png", caption: "Facility Overview" },
+          ];
+          const allGallery = galleryList.length > 0 ? galleryList : HARDCODED_GALLERY;
+          
+          return (
+            <div className="bg-muted border-y border-border py-24">
+              <div className="container">
+                <motion.h2
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                  custom={0}
+                  className="text-3xl font-black uppercase tracking-tight mb-8 border-b-4 border-primary inline-block pb-2"
+                >FACILITY GALLERY</motion.h2>
+                <motion.div
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                  className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                >
+                  {allGallery.map((img: any, idx: number) => (
+                    <motion.div key={img.id} variants={scaleIn} className="relative aspect-square bg-background border border-border group overflow-hidden">
+                      <img
+                        src={img.imageUrl}
+                        alt={img.caption || "Factory Floor"}
+                        className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
+                      />
+                      {img.caption && (
+                        <div className="absolute inset-x-0 bottom-0 bg-black/80 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                          <p className="text-xs text-white font-medium text-center">{img.caption}</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Blog Carousel Section */}
+        {(() => {
+          const HARDCODED_BLOGS = [
+            { id: 1, title: "Advancements in Multi-Cavity Mould Design", content: "Explore the latest techniques in our mould engineering process...", author: "Amit Kumar", coverImage: "/images/plastic.png" },
+            { id: 2, title: "Ensuring Quality in Rubber Components", content: "A deep dive into our quality assurance and testing procedures...", author: "Priya Singh", coverImage: "/images/rubber.png" },
+          ];
+          const allBlogs = blogPosts.length > 0 ? blogPosts : HARDCODED_BLOGS;
+
+          return (
+            <div id="blog" className="container py-24">
+              <motion.div
                 variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-80px" }}
                 custom={0}
-                className="text-3xl font-black uppercase tracking-tight mb-8 border-b-4 border-primary inline-block pb-2"
-              >FACILITY GALLERY</motion.h2>
+                className="flex justify-between items-end mb-8 border-b border-border pb-4"
+              >
+                <h2 className="text-3xl font-black uppercase tracking-tight border-b-4 border-primary inline-block pb-2 -mb-[18px]">LATEST UPDATES</h2>
+                <a href="#" className="text-sm font-bold text-primary hover:underline">VIEW ALL</a>
+              </motion.div>
               <motion.div
-                variants={staggerContainer}
+                variants={fadeUp}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-80px" }}
-                className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                custom={0.15}
+                className="bg-card border border-border p-8 rounded-sm shadow-sm"
               >
-                {galleryList.map((img: any, idx: number) => (
-                  <motion.div key={img.id} variants={scaleIn} className="relative aspect-square bg-background border border-border group overflow-hidden">
-                    <img
-                      src={img.imageUrl}
-                      alt={img.caption || "Factory Floor"}
-                      className="w-full h-full object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500"
-                    />
-                    {img.caption && (
-                      <div className="absolute inset-x-0 bottom-0 bg-black/80 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        <p className="text-xs text-white font-medium text-center">{img.caption}</p>
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
+                <BlogCarousel posts={allBlogs} onSelectPost={(post) => setSelectedBlogPost(post)} />
               </motion.div>
             </div>
-          </div>
-        )}
-
-        {/* Blog Carousel Section */}
-        {blogPosts.length > 0 && (
-          <div id="blog" className="container py-24">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              custom={0}
-              className="flex justify-between items-end mb-8 border-b border-border pb-4"
-            >
-              <h2 className="text-3xl font-black uppercase tracking-tight border-b-4 border-primary inline-block pb-2 -mb-[18px]">LATEST UPDATES</h2>
-              <a href="#" className="text-sm font-bold text-primary hover:underline">VIEW ALL</a>
-            </motion.div>
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              custom={0.15}
-              className="bg-card border border-border p-8 rounded-sm shadow-sm"
-            >
-              <BlogCarousel posts={blogPosts} onSelectPost={(post) => setSelectedBlogPost(post)} />
-            </motion.div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Contact Section */}
         <div id="contact" className="bg-secondary border-t border-border">
