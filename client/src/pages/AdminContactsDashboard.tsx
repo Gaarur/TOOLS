@@ -1,4 +1,4 @@
-﻿import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -15,8 +15,23 @@ export default function AdminContactsDashboard() {
     },
   });
 
+  const deleteMutation = trpc.admin.contacts.delete.useMutation({
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
   const handleMarkAsRead = (id: number) => {
     markAsReadMutation.mutate({ id });
+  };
+
+  const handleDelete = (id: number) => {
+    if (confirm("Are you sure you want to delete this message?")) {
+      deleteMutation.mutate({ id });
+      if (selectedSubmission?.id === id) {
+        setSelectedSubmission(null);
+      }
+    }
   };
 
   return (
@@ -58,13 +73,27 @@ export default function AdminContactsDashboard() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setSelectedSubmission(submission)}
-                    >
-                      View
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setSelectedSubmission(submission);
+                          if (!submission.read) {
+                            handleMarkAsRead(submission.id);
+                          }
+                        }}
+                      >
+                        View
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(submission.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -125,17 +154,12 @@ export default function AdminContactsDashboard() {
             </div>
 
             <div className="flex gap-3">
-              {!selectedSubmission?.read && (
-                <Button
-                  className="bg-primary text-primary-foreground uppercase tracking-wider"
-                  onClick={() => {
-                    handleMarkAsRead(selectedSubmission.id);
-                    setSelectedSubmission(null);
-                  }}
-                >
-                  Mark as Read
-                </Button>
-              )}
+              <Button
+                variant="destructive"
+                onClick={() => handleDelete(selectedSubmission.id)}
+              >
+                Delete
+              </Button>
               <Button variant="outline" onClick={() => setSelectedSubmission(null)}>
                 Close
               </Button>
