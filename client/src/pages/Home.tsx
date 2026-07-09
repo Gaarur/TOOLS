@@ -362,119 +362,100 @@ export default function Home() {
           </motion.div>
 
           <div className="grid gap-12">
-            {/* Plastic Injection Moulds */}
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm"
-            >
-              <motion.div variants={slideFromLeft} className="order-2 md:order-1">
-                <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">SERVICE 01</div>
-                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">PLASTIC INJECTION MOULDS</h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  High-precision moulds engineered for mass production of plastic components. We deliver precision-engineered solutions for demanding industrial applications with exceptional surface finish and dimensional accuracy.
-                </p>
-                <div className="grid gap-3 text-sm font-medium">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Precision tolerance: ±0.01mm</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Advanced cooling systems for cycle time optimization</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Multi-cavity designs for high-volume production</span>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div variants={slideFromRight} className="order-1 md:order-2 h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border">
-                <img
-                  src="/images/plastic.png"
-                  alt="Plastic Injection Moulding"
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* Rubber Moulds */}
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm"
-            >
-              <motion.div variants={slideFromLeft} className="h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border">
-                <img
-                  src="/images/rubber.png"
-                  alt="Rubber Moulding Equipment"
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-              <motion.div variants={slideFromRight}>
-                <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">SERVICE 02</div>
-                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">RUBBER MOULDS</h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  Specialized rubber mould manufacturing for seals, gaskets, and elastomer components. We deliver precision-engineered solutions for demanding sealing and vibration isolation applications.
-                </p>
-                <div className="grid gap-3 text-sm font-medium">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Precision hydraulic system for consistent compression</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Advanced heating systems for optimal curing</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Heavy-duty construction for long-term reliability</span>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            {/* Jigs & Fixtures */}
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm"
-            >
-              <motion.div variants={slideFromLeft} className="order-2 md:order-1">
-                <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">SERVICE 03</div>
-                <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">JIGS & FIXTURES</h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  Precision-engineered jigs and fixtures for assembly, testing, and inspection. Designed for accuracy, repeatability, and seamless integration with your production systems.
-                </p>
-                <div className="grid gap-3 text-sm font-medium">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Modular design for quick-change capability</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>High-precision locating repeatability ±0.005mm</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 bg-primary"></div>
-                    <span>Quick-change systems for flexibility</span>
-                  </div>
-                </div>
-              </motion.div>
-              <motion.div variants={slideFromRight} className="order-1 md:order-2 h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border">
-                <img
-                  src="/images/jigs.png"
-                  alt="Precision Fixturing"
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-            </motion.div>
+            {servicesList.length > 0 ? (
+              servicesList.map((service: any, index: number) => (
+                <motion.div
+                  key={service.id}
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, margin: "-80px" }}
+                  className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm"
+                >
+                  <motion.div
+                    variants={index % 2 === 0 ? slideFromLeft : slideFromRight}
+                    className={index % 2 === 0 ? "order-2 md:order-1" : ""}
+                  >
+                    <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">
+                      SERVICE {String(index + 1).padStart(2, "0")}
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">{service.title}</h3>
+                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                      {service.longDescription || service.shortDescription}
+                    </p>
+                    {service.shortDescription && (
+                      <div className="grid gap-3 text-sm font-medium">
+                        <div className="flex items-center gap-3">
+                          <div className="w-2 h-2 bg-primary"></div>
+                          <span>{service.shortDescription}</span>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                  <motion.div
+                    variants={index % 2 === 0 ? slideFromRight : slideFromLeft}
+                    className={`${index % 2 === 0 ? "order-1 md:order-2" : ""} h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border`}
+                  >
+                    {service.imageUrl ? (
+                      <img src={service.imageUrl} alt={service.title} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm font-medium">
+                        {service.title}
+                      </div>
+                    )}
+                  </motion.div>
+                </motion.div>
+              ))
+            ) : (
+              /* Fallback hardcoded services when no CMS data yet */
+              <>
+                <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm">
+                  <motion.div variants={slideFromLeft} className="order-2 md:order-1">
+                    <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">SERVICE 01</div>
+                    <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">PLASTIC INJECTION MOULDS</h3>
+                    <p className="text-muted-foreground mb-6 leading-relaxed">High-precision moulds engineered for mass production of plastic components with exceptional surface finish and dimensional accuracy.</p>
+                    <div className="grid gap-3 text-sm font-medium">
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Precision tolerance: ±0.01mm</span></div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Advanced cooling systems for cycle time optimization</span></div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Multi-cavity designs for high-volume production</span></div>
+                    </div>
+                  </motion.div>
+                  <motion.div variants={slideFromRight} className="order-1 md:order-2 h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border">
+                    <img src="/images/plastic.png" alt="Plastic Injection Moulding" className="w-full h-full object-cover" />
+                  </motion.div>
+                </motion.div>
+                <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm">
+                  <motion.div variants={slideFromLeft} className="h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border">
+                    <img src="/images/rubber.png" alt="Rubber Moulding Equipment" className="w-full h-full object-cover" />
+                  </motion.div>
+                  <motion.div variants={slideFromRight}>
+                    <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">SERVICE 02</div>
+                    <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">RUBBER MOULDS</h3>
+                    <p className="text-muted-foreground mb-6 leading-relaxed">Specialized rubber mould manufacturing for seals, gaskets, and elastomer components for demanding sealing applications.</p>
+                    <div className="grid gap-3 text-sm font-medium">
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Precision hydraulic system for consistent compression</span></div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Advanced heating systems for optimal curing</span></div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Heavy-duty construction for long-term reliability</span></div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+                <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid md:grid-cols-2 gap-8 items-center bg-card border border-border p-8 rounded-sm">
+                  <motion.div variants={slideFromLeft} className="order-2 md:order-1">
+                    <div className="text-primary font-bold text-sm tracking-widest uppercase mb-2">SERVICE 03</div>
+                    <h3 className="text-2xl font-bold mb-4 uppercase tracking-tight">JIGS & FIXTURES</h3>
+                    <p className="text-muted-foreground mb-6 leading-relaxed">Precision-engineered jigs and fixtures for assembly, testing, and inspection with accuracy and repeatability.</p>
+                    <div className="grid gap-3 text-sm font-medium">
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Modular design for quick-change capability</span></div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>High-precision locating repeatability ±0.005mm</span></div>
+                      <div className="flex items-center gap-3"><div className="w-2 h-2 bg-primary"></div><span>Quick-change systems for flexibility</span></div>
+                    </div>
+                  </motion.div>
+                  <motion.div variants={slideFromRight} className="order-1 md:order-2 h-64 md:h-80 relative bg-muted rounded-sm overflow-hidden border border-border">
+                    <img src="/images/jigs.png" alt="Precision Fixturing" className="w-full h-full object-cover" />
+                  </motion.div>
+                </motion.div>
+              </>
+            )}
           </div>
         </div>
 
