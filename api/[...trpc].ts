@@ -37,13 +37,25 @@ app.use((err: any, _req: any, res: any, _next: any) => {
   res.status(500).json({ error: "Express Global Error", details: String(err), stack: err.stack });
 });
 
-export default function handler(req: any, res: any) {
-  try {
-    return app(req, res);
-  } catch (err: any) {
-    console.error("Vercel Handler Error:", err);
-    res.status(500).json({ error: "Vercel Handler Error", details: String(err), stack: err?.stack });
+export default async function handler(req: any, res: any) {
+  // Fix path if Vercel stripped the /api/trpc prefix
+  if (req.url && !req.url.startsWith('/api/trpc')) {
+    req.url = `/api/trpc${req.url.startsWith('/') ? req.url : '/' + req.url}`;
   }
+
+  return new Promise((resolve, reject) => {
+    // Tell Vercel to wait until the response has finished sending
+    res.once('finish', resolve);
+    res.once('error', reject);
+    
+    try {
+      app(req, res);
+    } catch (err: any) {
+      console.error("Vercel Handler Error:", err);
+      res.status(500).json({ error: "Vercel Handler Error", details: String(err) });
+      resolve(true);
+    }
+  });
 }
 
 // Disable Vercel's default body parser so express.json() doesn't hang
