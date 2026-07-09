@@ -60,7 +60,7 @@ export const cmsRouter = router({
         .select()
         .from(testimonials)
         .where(eq(testimonials.visible, 1))
-        .orderBy(sql`${testimonials.displayOrder} ASC, ${testimonials.id} ASC`);
+        .orderBy(sql`${testimonials.displayOrder} ASC, ${testimonials.createdAt} DESC, ${testimonials.id} DESC`);
 
       const faqsList = await db
         .select()
@@ -408,6 +408,28 @@ export const cmsRouter = router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input }) => {
       await db.delete(faqs).where(eq(faqs.id, input.id));
+      return { success: true };
+    }),
+
+  // Public Testimonial Submission
+  submitTestimonial: publicProcedure
+    .input(
+      z.object({
+        clientName: z.string(),
+        company: z.string().optional(),
+        rating: z.number().min(1).max(5),
+        review: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await db.insert(testimonials).values({
+        clientName: input.clientName,
+        company: input.company || "",
+        rating: input.rating,
+        review: input.review,
+        visible: 1, // Visible by default as requested
+        displayOrder: 0,
+      });
       return { success: true };
     }),
 });

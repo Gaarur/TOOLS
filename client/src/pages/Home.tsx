@@ -146,7 +146,7 @@ export default function Home() {
 
   const contactMutation = trpc.contact.submit.useMutation({
     onSuccess: () => {
-      toast.success("Message sent successfully! We'll get back to you soon.");
+      toast.success("Message sent successfully! Our team will contact you soon.");
       setContactForm({ name: "", email: "", phone: "", subject: "", message: "" });
     },
     onError: (err: any) => toast.error(err.message || "Failed to send message"),
@@ -159,6 +159,29 @@ export default function Home() {
       return;
     }
     contactMutation.mutate(contactForm);
+  };
+
+  const utils = trpc.useUtils();
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackForm, setFeedbackForm] = useState({ clientName: "", company: "", rating: 5, review: "" });
+  
+  const feedbackMutation = trpc.site.submitTestimonial.useMutation({
+    onSuccess: () => {
+      toast.success("Thank you for your feedback!");
+      setFeedbackForm({ clientName: "", company: "", rating: 5, review: "" });
+      setShowFeedbackModal(false);
+      utils.site.getContent.invalidate();
+    },
+    onError: (err: any) => toast.error(err.message || "Failed to submit feedback"),
+  });
+
+  const handleFeedbackSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!feedbackForm.clientName || !feedbackForm.review) {
+      toast.error("Please fill in your name and review");
+      return;
+    }
+    feedbackMutation.mutate(feedbackForm);
   };
 
   // Extract CMS data with fallbacks
@@ -693,17 +716,25 @@ export default function Home() {
         {/* Testimonials Section */}
         {(() => {
           const HARDCODED_TESTIMONIALS = [
-            { id: 1, name: "Suresh Patel", role: "Production Head, Automotive Parts", content: "OMTT's precision is unmatched. The multi-cavity moulds they delivered reduced our cycle time by 15% and have been running flawlessly for over a million cycles.", rating: 5 },
-            { id: 2, name: "Anita Desai", role: "Quality Director, Medical Devices", content: "The level of accuracy and surface finish achieved in our complex rubber seals was exceptional. Their CMM inspection reports provided complete confidence.", rating: 5 },
-            { id: 3, name: "Vikram Singh", role: "Operations Manager, Electronics", content: "We rely on their jigs and fixtures for our assembly lines. The quick-change capabilities have significantly improved our changeover times.", rating: 5 }
+            { id: 1, clientName: "Suresh Patel", company: "Production Head, Automotive Parts", review: "OMTT's precision is unmatched. The multi-cavity moulds they delivered reduced our cycle time by 15% and have been running flawlessly for over a million cycles.", rating: 5 },
+            { id: 2, clientName: "Anita Desai", company: "Quality Director, Medical Devices", review: "The level of accuracy and surface finish achieved in our complex rubber seals was exceptional. Their CMM inspection reports provided complete confidence.", rating: 5 },
+            { id: 3, clientName: "Vikram Singh", company: "Operations Manager, Electronics", review: "We rely on their jigs and fixtures for our assembly lines. The quick-change capabilities have significantly improved our changeover times.", rating: 5 }
           ];
           const allTestimonials = testimonialsList.length > 0 ? testimonialsList : HARDCODED_TESTIMONIALS;
 
           return (
-            <div id="testimonials" className="container py-24">
-              <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} custom={0} className="max-w-2xl mb-12">
-                <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">CLIENT TESTIMONIALS</h2>
-                <p className="text-muted-foreground text-lg">Trusted by industry leaders for uncompromising quality and reliability.</p>
+            <div id="testimonials" className="container py-24 relative">
+              <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} custom={0} className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-border pb-4 gap-4">
+                <div className="max-w-2xl">
+                  <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">CLIENT TESTIMONIALS</h2>
+                  <p className="text-muted-foreground text-lg">Trusted by industry leaders for uncompromising quality and reliability.</p>
+                </div>
+                <Button 
+                  onClick={() => setShowFeedbackModal(true)}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wider rounded-sm shrink-0"
+                >
+                  Your Feedback
+                </Button>
               </motion.div>
               <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid md:grid-cols-3 gap-8">
                 {allTestimonials.map((testimonial: any) => (
@@ -714,10 +745,10 @@ export default function Home() {
                         <Star key={i} className="w-4 h-4 fill-primary" />
                       ))}
                     </div>
-                    <p className="text-muted-foreground italic mb-6 leading-relaxed relative z-10">"{testimonial.content}"</p>
+                    <p className="text-muted-foreground italic mb-6 leading-relaxed relative z-10">"{testimonial.review}"</p>
                     <div>
-                      <h4 className="font-bold text-foreground text-sm uppercase">{testimonial.name}</h4>
-                      <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                      <h4 className="font-bold text-foreground text-sm uppercase">{testimonial.clientName}</h4>
+                      <p className="text-xs text-muted-foreground">{testimonial.company}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -960,6 +991,83 @@ export default function Home() {
               <div className="prose dark:prose-invert max-w-none text-foreground leading-relaxed">
                 {selectedBlogPost.content}
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Feedback Modal */}
+      {showFeedbackModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-background rounded-sm max-w-xl w-full border border-border shadow-2xl relative">
+            <button
+              onClick={() => setShowFeedbackModal(false)}
+              className="absolute top-4 right-4 text-2xl leading-none text-muted-foreground hover:text-foreground transition"
+            >
+              &times;
+            </button>
+            <div className="p-8 md:p-10">
+              <h2 className="text-2xl font-black uppercase tracking-tight mb-2">Submit Your Feedback</h2>
+              <p className="text-muted-foreground mb-6">We value your experience working with OM TECHNO TOOLS. Please share your thoughts.</p>
+              
+              <form onSubmit={handleFeedbackSubmit} className="space-y-4">
+                <div className="grid gap-2">
+                  <label className="text-sm font-bold uppercase text-foreground">Your Name <span className="text-primary">*</span></label>
+                  <Input 
+                    required 
+                    placeholder="John Doe" 
+                    value={feedbackForm.clientName}
+                    onChange={e => setFeedbackForm({...feedbackForm, clientName: e.target.value})}
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <label className="text-sm font-bold uppercase text-foreground">Company</label>
+                  <Input 
+                    placeholder="Acme Industries" 
+                    value={feedbackForm.company}
+                    onChange={e => setFeedbackForm({...feedbackForm, company: e.target.value})}
+                    className="bg-muted border-border"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <label className="text-sm font-bold uppercase text-foreground">Rating</label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button 
+                        key={star} 
+                        type="button" 
+                        onClick={() => setFeedbackForm({...feedbackForm, rating: star})}
+                        className="hover:scale-110 transition-transform"
+                      >
+                        <Star className={`w-8 h-8 ${feedbackForm.rating >= star ? 'fill-primary text-primary' : 'text-muted-foreground/30'}`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid gap-2">
+                  <label className="text-sm font-bold uppercase text-foreground">Review <span className="text-primary">*</span></label>
+                  <Textarea 
+                    required 
+                    rows={4}
+                    placeholder="How was your experience..." 
+                    value={feedbackForm.review}
+                    onChange={e => setFeedbackForm({...feedbackForm, review: e.target.value})}
+                    className="bg-muted border-border resize-none"
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  disabled={feedbackMutation.isPending}
+                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-sm font-bold tracking-widest uppercase mt-4"
+                >
+                  {feedbackMutation.isPending ? (
+                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> SUBMITTING...</>
+                  ) : (
+                    "SUBMIT TESTIMONIAL"
+                  )}
+                </Button>
+              </form>
             </div>
           </div>
         </div>
