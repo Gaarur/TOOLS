@@ -603,38 +603,34 @@ export default function Home() {
         </div>
 
         {/* Team Members Section */}
-        {teamList.length > 0 && (
-          <div id="team" className="container py-24">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              custom={0}
-              className="max-w-2xl mb-12"
-            >
-              <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">OUR TEAM</h2>
-              <p className="text-muted-foreground text-lg">The experienced engineers and specialists driving precision excellence.</p>
-            </motion.div>
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-            >
-              {teamList.map((member: any) => (
+        <div id="team" className="container py-24">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            custom={0}
+            className="max-w-2xl mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">OUR TEAM</h2>
+            <p className="text-muted-foreground text-lg">The experienced engineers and specialists driving precision excellence.</p>
+          </motion.div>
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {teamList.length > 0 ? (
+              teamList.map((member: any) => (
                 <motion.div
                   key={member.id}
                   variants={staggerItem}
                   className="bg-card border border-border rounded-sm p-6 flex flex-col items-center text-center group hover:border-primary transition-colors duration-300"
                 >
                   {member.photoUrl ? (
-                    <img
-                      src={member.photoUrl}
-                      alt={member.name}
-                      className="w-20 h-20 rounded-full object-cover border-2 border-border group-hover:border-primary transition-colors duration-300 mb-4"
-                    />
+                    <img src={member.photoUrl} alt={member.name} className="w-20 h-20 rounded-full object-cover border-2 border-border group-hover:border-primary transition-colors duration-300 mb-4" />
                   ) : (
                     <div className="w-20 h-20 rounded-full bg-primary/10 border-2 border-border group-hover:border-primary transition-colors duration-300 mb-4 flex items-center justify-center">
                       <span className="text-2xl font-bold text-primary">{member.name?.charAt(0)?.toUpperCase()}</span>
@@ -642,27 +638,41 @@ export default function Home() {
                   )}
                   <h3 className="font-bold text-foreground text-base">{member.name}</h3>
                   <p className="text-primary text-xs font-semibold uppercase tracking-wider mt-1 mb-3">{member.role}</p>
-                  {member.bio && (
-                    <p className="text-muted-foreground text-xs leading-relaxed">{member.bio}</p>
-                  )}
+                  {member.bio && <p className="text-muted-foreground text-xs leading-relaxed">{member.bio}</p>}
                   {(member.linkedin || member.twitter || member.github) && (
                     <div className="flex gap-3 mt-4">
-                      {member.linkedin && (
-                        <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xs font-medium">LinkedIn</a>
-                      )}
-                      {member.twitter && (
-                        <a href={member.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xs font-medium">Twitter</a>
-                      )}
-                      {member.github && (
-                        <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xs font-medium">GitHub</a>
-                      )}
+                      {member.linkedin && <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xs font-medium">LinkedIn</a>}
+                      {member.twitter && <a href={member.twitter} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xs font-medium">Twitter</a>}
+                      {member.github && <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors text-xs font-medium">GitHub</a>}
                     </div>
                   )}
                 </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        )}
+              ))
+            ) : (
+              /* Fallback hardcoded team when no CMS data */
+              <>
+                {[
+                  { name: "Rajesh Sharma", role: "Founder & Managing Director", bio: "25+ years of pioneering experience in tool room operations and precision mould engineering.", initial: "R" },
+                  { name: "Amit Kumar", role: "Head of Design & CAD/CAM", bio: "Specialist in multi-cavity mould design, flow simulation, and CNC tool path optimization.", initial: "A" },
+                  { name: "Priya Singh", role: "Quality Assurance Lead", bio: "CMM metrology expert ensuring every component meets ISO 9001 and customer-specific quality standards.", initial: "P" },
+                ].map((member) => (
+                  <motion.div
+                    key={member.name}
+                    variants={staggerItem}
+                    className="bg-card border border-border rounded-sm p-6 flex flex-col items-center text-center group hover:border-primary transition-colors duration-300"
+                  >
+                    <div className="w-20 h-20 rounded-full bg-primary/10 border-2 border-border group-hover:border-primary transition-colors duration-300 mb-4 flex items-center justify-center">
+                      <span className="text-2xl font-bold text-primary">{member.initial}</span>
+                    </div>
+                    <h3 className="font-bold text-foreground text-base">{member.name}</h3>
+                    <p className="text-primary text-xs font-semibold uppercase tracking-wider mt-1 mb-3">{member.role}</p>
+                    <p className="text-muted-foreground text-xs leading-relaxed">{member.bio}</p>
+                  </motion.div>
+                ))}
+              </>
+            )}
+          </motion.div>
+        </div>
 
         {/* Gallery Section */}
         {galleryList.length > 0 && (
