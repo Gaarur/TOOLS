@@ -2,14 +2,18 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/client",
   "functions": {
-    "api/[...trpc].ts": {
+    "api/index.ts": {
       "includeFiles": "{server,shared,drizzle}/**",
       "maxDuration": 30
     }
   },
   "rewrites": [
     {
-      "source": "/((?!api/).*)",
+      "source": "/api/(.*)",
+      "destination": "/api"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
