@@ -102,6 +102,11 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [showAllTeam, setShowAllTeam] = useState(false);
+  const HARDCODED_TEAM = [
+    { name: "Rajesh Sharma", role: "Founder & Managing Director", bio: "25+ years of pioneering experience in tool room operations and precision mould engineering.", initial: "R" },
+    { name: "Amit Kumar", role: "Head of Design & CAD/CAM", bio: "Specialist in multi-cavity mould design, flow simulation, and CNC tool path optimization.", initial: "A" },
+    { name: "Priya Singh", role: "Quality Assurance Lead", bio: "CMM metrology expert ensuring every component meets ISO 9001 and customer-specific quality standards.", initial: "P" },
+  ];
   const { theme, toggleTheme } = useTheme();
   
   // Header scroll state
@@ -604,11 +609,6 @@ export default function Home() {
         </div>
         {/* Team Members Section */}
         {(() => {
-          const HARDCODED_TEAM = [
-            { name: "Rajesh Sharma", role: "Founder & Managing Director", bio: "25+ years of pioneering experience in tool room operations and precision mould engineering.", initial: "R" },
-            { name: "Amit Kumar", role: "Head of Design & CAD/CAM", bio: "Specialist in multi-cavity mould design, flow simulation, and CNC tool path optimization.", initial: "A" },
-            { name: "Priya Singh", role: "Quality Assurance Lead", bio: "CMM metrology expert ensuring every component meets ISO 9001 and customer-specific quality standards.", initial: "P" },
-          ];
           const allMembers: any[] = teamList.length > 0 ? teamList : HARDCODED_TEAM;
           const visibleMembers = showAllTeam ? allMembers : allMembers.slice(0, 4);
           const hasMore = allMembers.length > 4;
@@ -618,9 +618,16 @@ export default function Home() {
                 <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight mb-4 border-b-4 border-primary inline-block pb-2">OUR TEAM</h2>
                 <p className="text-muted-foreground text-lg">The experienced engineers and specialists driving precision excellence.</p>
               </motion.div>
-              <motion.div variants={staggerContainer} initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-80px" }} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {visibleMembers.map((member: any) => (
-                  <motion.div key={member.id ?? member.name} variants={staggerItem} className="bg-card border border-border rounded-sm p-6 flex flex-col items-center text-center group hover:border-primary transition-colors duration-300">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {visibleMembers.map((member: any, idx: number) => (
+                  <motion.div
+                    key={member.id ?? member.name}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-40px" }}
+                    transition={{ duration: 0.5, delay: idx * 0.08, ease: "easeOut" }}
+                    className="bg-card border border-border rounded-sm p-6 flex flex-col items-center text-center group hover:border-primary transition-colors duration-300"
+                  >
                     {member.photoUrl ? (
                       <img src={member.photoUrl} alt={member.name} className="w-20 h-20 rounded-full object-cover border-2 border-border group-hover:border-primary transition-colors duration-300 mb-4" />
                     ) : (
@@ -640,7 +647,7 @@ export default function Home() {
                     )}
                   </motion.div>
                 ))}
-              </motion.div>
+              </div>
               {hasMore && (
                 <div className="flex justify-center mt-10">
                   <motion.button
